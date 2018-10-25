@@ -11,22 +11,112 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## Análise do dataset
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+#### Carregando dados:
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+```{r}
+bank_data <- read.csv("bank-full.csv", sep = ";")
 
-```{r cars}
-summary(cars)
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+#### Verificando as dimensões dos dados:
+```{r}
+dim(bank_data)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Pelo número de entradas, 45211, podemos perceber que esse banco de dados está relacionado com os dados após a terceira iteração do método CRISP-DM realizada no artigo "USING DATA MINING FOR BANK DIRECT MARKETING: AN APPLICATION OF THE CRISP-DM METHODOLOGY", disponível em <http://hdl.handle.net/1822/14838>. Nesse dataset, como descrito no arquivo "bank-names.txt", não há instâncias com atributos faltantes e alguns atributos foram suprimidos.
+
+Vemos que o problema original é um problema de classificação com variáveis mistas, embora as questões específicas do desafio possam representar problemas diferentes.
+
+
+## Preparação do ambiente
+
+#### Instalando pacotes
+
+Utilizamos a biblioteca caret para algumas tarefas básicas, bem como outras bibliotecas para treinamentos específicos:
+```{r, eval=FALSE}
+install.packages("caret")
+install.packages("ggplot2")
+install.packages("dplyr")
+```
+
+#### Carregando bibliotecas
+
+```{r, message=FALSE}
+library(caret)
+library(ggplot2)
+library(dplyr)
+```
+
+## Questões
+
+#### 1. Qual profissão tem mais tendência a fazer um empréstimo? De qual tipo?
+
+Pelo dataset, encontramos dois tipos diferentes de empréstimos, listados como variáveis categóricas (cada cliente possui ou não possui tal tipo de empréstimo). O primeiro deles, "housing", indica se o cliente possui empréstimo imobiliário, enquanto o segundo, "loan", indica se o cliente possui empréstimo pessoal.
+
+
+Contagem de clientes por tipo de trabalho:
+```{r}
+ggplot(bank_data, aes(x=bank_data$job )) + geom_bar() +
+    theme(axis.text.x = element_text(angle = 60, hjust = 1))
+```
+```{r}
+plyr::count(bank_data, "job")
+```
+
+<!--
+```{r}
+has_loan_data  <- subset(bank_data, housing=="yes" | loan=="yes", select=c(job, housing, loan))
+ggplot(has_loan_data, aes(x=has_loan_data$job )) + geom_bar() + theme(axis.text.x = element_text(angle = 60, hjust = 1))
+```
+-->
+Contagem de clientes que possuem algum tipo de empréstimo:
+```{r}
+has_loan_data  <- subset(bank_data, housing=="yes" | loan=="yes", select=c(job, housing, loan))
+ggplot(has_loan_data, aes(x=has_loan_data$job )) + geom_bar() +
+    theme(axis.text.x = element_text(angle = 60, hjust = 1))
+```
+
+```{r}
+plyr::count(has_loan_data, "job")
+```
+
+Proporção de clientes que possuem algum tipo de empréstimo, para cada trabalho:
+```{r calc-total-loan}
+has_loan_data <- mutate(bank_data, any_loan = ifelse(loan=="yes", "yes", ifelse(housing=="yes", "yes", "no")))
+ggplot(has_loan_data, aes(x=has_loan_data$job, fill = any_loan)) + 
+    geom_bar(position = "fill") + theme(axis.text.x = element_text(angle = 60, hjust = 1))
+```
+
+Mais especificamente, para os trabalhadores com maior proporção de empréstimos, temos:
+```{r}
+bc_loan_proportion = sum(has_loan_data$any_loan=="yes" & has_loan_data$job=="blue-collar") /
+    sum(has_loan_data$job=="blue-collar")
+bc_loan_proportion
+```
+
+Olhando para o tipo de empréstimos, temos:
+```{r}
+bc_loan_housing = sum(has_loan_data$housing=="yes" & has_loan_data$job=="blue-collar") /
+    sum(has_loan_data$any_loan=="yes" & has_loan_data$job=="blue-collar")
+bc_loan_housing
+```
+
+```{r}
+bc_loan_loan = sum(has_loan_data$loan=="yes" & has_loan_data$job=="blue-collar") /
+    sum(has_loan_data$any_loan=="yes" & has_loan_data$job=="blue-collar")
+bc_loan_loan
+```
+
+Esses resultados nos mostram que, no espaço dos clientes do banco em questão, os chamados trabalhadores "blue-collar" são os que possuem maior tendência a possuírem empréstimos, sendo que aproximadamente 93% deles possuem um empréstimo imobiliário e 22% deles possuem um empréstimo pessoal.
+
+#### 2. Fazendo uma relação entre número de contatos e sucesso da campanha quais são os pontos relevantes a serem observados?
+
+#### 3. Baseando-se nos resultados de adesão desta campanha qual o número médio e o máximo de ligações que você indica para otimizar a adesão?
+
+#### 4. O resultado da campanha anterior tem relevância na campanha atual?
+
+#### 5. Qual o fator determinante para que o banco exija um seguro de crédito?
+
+#### 6. Quais são as características mais proeminentes de um cliente que possua empréstimo imobiliário?
