@@ -39,6 +39,7 @@ Utilizamos a biblioteca caret para algumas tarefas básicas, bem como outras bib
 install.packages("caret")
 install.packages("ggplot2")
 install.packages("dplyr")
+install.packages("stats")
 ```
 
 #### Carregando bibliotecas
@@ -47,6 +48,7 @@ install.packages("dplyr")
 library(caret)
 library(ggplot2)
 library(dplyr)
+library(stats)
 ```
 
 ## Questões
@@ -164,6 +166,23 @@ plyr::count(contacts_data$campaign>=1 & contacts_data$y=="yes")
 Considerando os gráficos da questão anterior, que exibiam a taxa de sucesso da campanha considerando todos os clientes e apenas os contactados anteriormente, pudemos perceber que em ambos os casos a taxa de sucesso caía bastante para clientes com número de contatos acima de 15, 20. Considerando também que campanhas com maior número de ligações tendem a ser mais caras, eu indicaria um máximo de 15 ligações, e uma média entre 5 e 10 ligações para cada cliente.
 
 #### 4. O resultado da campanha anterior tem relevância na campanha atual?
+
+Para determinar a relevância do resultado anterior podemos verificar se as duas variáveis são independentes. Isto é, se o conhecimento sobre o valor da variável "poutcome" modifica a probabilidade esperada do valor da variável "y". Como ambas as variáveis são categóricas, podemos utilizar o teste qui-quadrado de Pearson, incluso na biblioteca stats. Nossa hipótese nula será de que as duas variáveis são independentes, e a nossa hipótese alternativa de que elas são dependentes entre si.
+
+```{r}
+chisq.test(bank_data$poutcome, bank_data$y)
+```
+De acordo com a documentação do dataset, a variável "poutcome" pode assumir quatro valores: "unknown","other","failure","success". Caso quiséssemos trabalhar com apenas dois valores possíveis, por exemplo, poderíamos agrupar "unknown","other" e "failure" em um único valor, deixando "success" para o restante, e aplicar o teste novamente:
+
+```{r}
+bank_outcome <- bank_data %>%
+  mutate(poutcome2 = (poutcome=="success"))
+
+chisq.test(bank_outcome$poutcome2, bank_outcome$y)
+```
+
+O resultado de ambos os testes nos revelou um p-value considerávelmente baixo, de 2.2 * 10^(-16). A partir desse valor podemos com confiança rejeitar a hipótese nula em favor da hipótese alternativa, isto é, o resultado da campanha anterior tem relevância ao predizermos o resultado da campanha atual.
+
 
 #### 5. Qual o fator determinante para que o banco exija um seguro de crédito?
 
