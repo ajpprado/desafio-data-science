@@ -109,9 +109,55 @@ bc_loan_loan = sum(has_loan_data$loan=="yes" & has_loan_data$job=="blue-collar")
 bc_loan_loan
 ```
 
-Esses resultados nos mostram que, no espaço dos clientes do banco em questão, os chamados trabalhadores "blue-collar" são os que possuem maior tendência a possuírem empréstimos, sendo que aproximadamente 93% deles possuem um empréstimo imobiliário e 22% deles possuem um empréstimo pessoal.
+Esses resultados nos mostram que, no espaço dos clientes do banco em questão, os chamados trabalhadores "blue-collar" são os que possuem maior tendência a possuírem empréstimos (78%), sendo que, dos que possuem algum empréstimo, aproximadamente 93% deles possuem um empréstimo imobiliário e 22% deles possuem um empréstimo pessoal.
 
 #### 2. Fazendo uma relação entre número de contatos e sucesso da campanha quais são os pontos relevantes a serem observados?
+
+Analisando os dados, considerando que o sucesso da campanha se refere à campanha atual, isto é, a variável y do dataset.
+Fazendo uma contagem preliminar da freqência absoluta do número de contatos, nessa campanha e em campanhas anteriores:
+```{r}
+contacts_data <- bank_data[, c(13, 15, 17)]
+contacts_campaign <- plyr::count(contacts_data, "campaign")
+contacts_previous <- plyr::count(contacts_data, "previous")
+plyr::count(contacts_data, "campaign")
+plyr::count(contacts_data, "previous")
+```
+
+
+```{r}
+range <- (1:10)
+lista1 <- (1:10)
+lista2 <- (1:10)
+lista_campaign <- (1:10)
+lista_previous <- (1:10)
+for (x in range){
+    lista1[x] <- sum(contacts_data$campaign==(5*x)-5 | contacts_data$campaign==(5*x)-4 | contacts_data$campaign==(5*x)-3 | contacts_data$campaign==(5*x)-2 | contacts_data$campaign==(5*x)-1)
+    lista2[x] <- sum((contacts_data$campaign==(5*x)-5 | contacts_data$campaign==(5*x)-4 | contacts_data$campaign==(5*x)-3 | contacts_data$campaign==(5*x)-2 | contacts_data$campaign==(5*x)-2) & contacts_data$y=="yes")
+    lista_campaign[x] <- lista2[x]/lista1[x]
+}
+for (x in range){
+    lista1[x] <- sum(contacts_data$previous==(5*x)-5 | contacts_data$previous==(5*x)-4 | contacts_data$previous==(5*x)-3 | contacts_data$previous==(5*x)-2 | contacts_data$previous==(5*x)-1)
+    lista2[x] <- sum((contacts_data$previous==(5*x)-5 | contacts_data$previous==(5*x)-4 | contacts_data$previous==(5*x)-3 | contacts_data$previous==(5*x)-1 | contacts_data$previous==(5*x)-1) & contacts_data$y=="yes")
+    lista_previous[x] <- lista2[x]/lista1[x]
+}
+
+ggplot(data.frame(range),aes((range*5)-2.5,lista_campaign))+geom_bar(stat="identity") + xlim(0, 50) + labs(x = "Contatos Campanha", y = "Proporção Outcome 'Yes'")
+ggplot(data.frame(range),aes((range*5)-2.5,lista_previous))+geom_bar(stat="identity") + xlim(0, 50) + labs(x = "Contatos Campanha Anterior", y = "Proporção Outcome 'Yes'")
+```
+
+Devido ao grande número de possíveis contatos, o que dificultava a análise, nos gráficos acima eles foram agrupados em compartimentos de tamanho cinco e calculada a proporção de sucesso de cada compartimento.
+Podemos ver que a porporção de sucessos da campanha atual cai com o aumento do número de contatos. O que não quer dizer que haja uma relação causal nesse sentido, um possível cliente mais indeciso potencialmente pode receber mais ligações, mesmo que sua probabilidade de assinar o plano fosse baixa desde o início.
+Para campanhas anteriores, o número de contatos não parece ter uma relação muito clara com o sucesso da campanha atual. Apesar disso, podemos perceber que a taxa de adesão da campanha atual, considerando os clientes que haviam sido contatados ateriormente, é significativamente maior (23%) que a taxa de adesão geral (11%):
+
+```{r}
+plyr::count(contacts_data$previous>=1)
+plyr::count(contacts_data$previous>=1 & contacts_data$y=="yes")
+1905 / 8257
+
+plyr::count(contacts_data$campaign>=1)
+plyr::count(contacts_data$campaign>=1 & contacts_data$y=="yes")
+5289 / 45211
+```
 
 #### 3. Baseando-se nos resultados de adesão desta campanha qual o número médio e o máximo de ligações que você indica para otimizar a adesão?
 
