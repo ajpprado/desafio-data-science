@@ -4,7 +4,8 @@ Análise do Dataset Bank Marketing
 
 ## Introdução
 
-O desenvolvimento do projeto e a resolução das questões será realizado no arquivo desafio.Rmd
+O desenvolvimento do projeto e a resolução das questões foram realizados no arquivo desafio.Rmd.
+O output do arquivo foi salvo em desafio.html, que serve como relatório do desafio.
 
 ## Autor
 
@@ -13,9 +14,12 @@ O desenvolvimento do projeto e a resolução das questões será realizado no ar
 ## Referências
 
 ### Bibliotecas
+Caret: https://CRAN.R-project.org/package=caret
+Ggplot2: https://cran.r-project.org/package=ggplot2
+Dplyr: https://cran.r-project.org/package=dplyr
 
-Aqui serão listadas as o pacotes R utilizados pelas funções do projeto.
 
 ### Dataset
 
+USING DATA MINING FOR BANK DIRECT MARKETING: AN APPLICATION OF THE CRISP-DM METHODOLOGY: http://hdl.handle.net/1822/14838
 https://archive.ics.uci.edu/ml/datasets/Bank+Marketing
