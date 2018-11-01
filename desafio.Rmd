@@ -181,9 +181,11 @@ bank_outcome <- bank_data %>%
 chisq.test(bank_outcome$poutcome2, bank_outcome$y)
 ```
 
-O resultado de ambos os testes nos revelou um p-value considerávelmente baixo, de 2.2 * 10^(-16). A partir desse valor podemos com confiança rejeitar a hipótese nula em favor da hipótese alternativa, isto é, o resultado da campanha anterior tem relevância ao predizermos o resultado da campanha atual.
+O resultado de ambos os testes nos revelou um p-value consideravelmente baixo, de 2.2 * 10^(-16). A partir desse valor podemos com confiança rejeitar a hipótese nula em favor da hipótese alternativa, isto é, o resultado da campanha anterior tem relevância ao predizermos o resultado da campanha atual.
 
 
 #### 5. Qual o fator determinante para que o banco exija um seguro de crédito?
+
+Não sei se entendi muito bem essa pergunta... O dataset em questão se refere a se clientes realizarão depósitos a prazo no banco, então não vejo a necessidade de seguro de crédito por parte do banco. Caso a pergunta seja mais geral, acredito que as variáveis "loan", "housing" e "default" possam ter relação com a necessidade de seguro. Dessas variáveis, "default" provavelmente seria a mais relevante, pois indica a inadimplência do cliente com relação a outros créditos.
 
 #### 6. Quais são as características mais proeminentes de um cliente que possua empréstimo imobiliário?
