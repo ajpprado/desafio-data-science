@@ -21,5 +21,5 @@ O output do arquivo foi salvo em desafio.html, que serve como relatório do desa
 
 ### Dataset
 
-USING DATA MINING FOR BANK DIRECT MARKETING: AN APPLICATION OF THE CRISP-DM METHODOLOGY: http://hdl.handle.net/1822/14838
+USING DATA MINING FOR BANK DIRECT MARKETING: AN APPLICATION OF THE CRISP-DM METHODOLOGY: http://hdl.handle.net/1822/14838  
 https://archive.ics.uci.edu/ml/datasets/Bank+Marketing
