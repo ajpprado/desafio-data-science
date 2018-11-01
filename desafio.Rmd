@@ -3,8 +3,8 @@ title: "Desafio Data Science"
 author: "Antonio Prado"
 date: "October 31, 2018"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -147,7 +147,7 @@ ggplot(data.frame(range),aes((range*5)-2.5,lista_campaign))+geom_bar(stat="ident
 ggplot(data.frame(range),aes((range*5)-2.5,lista_previous))+geom_bar(stat="identity") + xlim(0, 50) + labs(x = "Contatos Campanha Anterior", y = "Proporção Outcome 'Yes'")
 ```
 
-Devido ao grande número de possíveis contatos, o que dificultava a análise, nos gráficos acima eles foram agrupados em compartimentos de tamanho cinco e calculada a proporção de sucesso de cada compartimento. No primeiro gráfico todos os clientes foram considerados. No segundo, apenas os que já haviam sido contactados anteriormente.
+Devido ao grande número de possíveis contatos, o que dificultava a análise, nos gráficos acima eles foram agrupados em compartimentos de tamanho cinco e calculada a proporção de sucesso de cada compartimento. No primeiro gráfico todos os clientes foram considerados. No segundo, apenas os que já haviam sido contatados anteriormente.
 Podemos ver que a porporção de sucessos da campanha atual cai com o aumento do número de contatos. O que não quer dizer que haja uma relação causal nesse sentido, um possível cliente mais indeciso potencialmente pode receber mais ligações, mesmo que sua probabilidade de assinar o plano fosse baixa desde o início.
 Para campanhas anteriores, o número de contatos não parece ter uma relação muito clara com o sucesso da campanha atual. Apesar disso, podemos perceber que a taxa de adesão da campanha atual, considerando os clientes que haviam sido contatados ateriormente, é significativamente maior (23%) que a taxa de adesão geral (11%):
 
@@ -262,3 +262,7 @@ Tomando um pouco de liberdade, poderíamos dizer que o cliente padrão que possu
 
 
 ## Referências
+
+USING DATA MINING FOR BANK DIRECT MARKETING: AN APPLICATION OF THE CRISP-DM METHODOLOGY: http://hdl.handle.net/1822/14838
+
+https://archive.ics.uci.edu/ml/datasets/Bank+Marketing
