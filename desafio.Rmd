@@ -1,10 +1,10 @@
 ---
 title: "Desafio Data Science"
 author: "Antonio Prado"
-date: "October 24, 2018"
+date: "October 31, 2018"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -189,3 +189,76 @@ O resultado de ambos os testes nos revelou um p-value consideravelmente baixo, d
 Não sei se entendi muito bem essa pergunta... O dataset em questão se refere a se clientes realizarão depósitos a prazo no banco, então não vejo a necessidade de seguro de crédito por parte do banco. Caso a pergunta seja mais geral, acredito que as variáveis "loan", "housing" e "default" possam ter relação com a necessidade de seguro. Dessas variáveis, "default" provavelmente seria a mais relevante, pois indica a inadimplência do cliente com relação a outros créditos.
 
 #### 6. Quais são as características mais proeminentes de um cliente que possua empréstimo imobiliário?
+
+Podemos separar o dataset em dois grupos, sendo um dele possuidor de crédito imobiliário e outro não possuidor, de forma a podermos extrair atributos dos dois grupos e compará-los.
+
+```{r}
+has_housing <- bank_data[ which(bank_data$housing=="yes"), ]
+not_housing <- bank_data[ which(bank_data$housing=="no"), ]
+```
+
+O dataset original contém 8 atributos para os clientes. Removendo-se o atributo housing, que foi utilizado para a separação dos grupos, ficamos com: age (numérico), job (categórico), marital (categórico), education (categórico), default (categórico), balance (numérico) e loan (categórico). Podemos verificar individualmente cada um deles, em busca de anomalias.
+
+Primeiro os atributos numéricos:
+
+```{r}
+hist(has_housing$age)
+mean(has_housing$age)
+median(has_housing$age)
+hist(not_housing$age)
+mean(not_housing$age)
+median(not_housing$age)
+
+hist(has_housing$balance)
+mean(has_housing$balance)
+median(has_housing$balance)
+hist(not_housing$balance)
+mean(not_housing$balance)
+median(not_housing$balance)
+```
+
+Pelos dados acima, podemos ver que os clientes que possuem empréstimo imobiliário são um pouco mais novos que os que não possuem, mas a diferença é pequena.
+
+A diferença no saldo médio da conta é um pouco mais pronunciada, com os clientes que não possuem empréstimos imobiliarios contando com maior saldo.
+
+Quanto aos atributos categóricos:
+
+
+```{r}
+
+ggplot(has_housing, aes(x=has_housing$job )) + geom_bar() +
+    theme(axis.text.x = element_text(angle = 60, hjust = 1))
+
+ggplot(not_housing, aes(x=not_housing$job )) + geom_bar() +
+    theme(axis.text.x = element_text(angle = 60, hjust = 1))
+
+ggplot(has_housing, aes(x=has_housing$marital )) + geom_bar()
+
+ggplot(not_housing, aes(x=not_housing$marital )) + geom_bar()
+
+ggplot(has_housing, aes(x=has_housing$education )) + geom_bar()
+
+ggplot(not_housing, aes(x=not_housing$education )) + geom_bar()
+
+ggplot(has_housing, aes(x=has_housing$default )) + geom_bar()
+
+ggplot(not_housing, aes(x=not_housing$default )) + geom_bar()
+
+ggplot(has_housing, aes(x=has_housing$loan )) + geom_bar()
+
+ggplot(not_housing, aes(x=not_housing$loan )) + geom_bar()
+```
+
+Pelos dados acima, podemos notar que as variáveis loan, default e marital não apresentam comportamento distinto quando consideramos os dois grupos, mantendo-se aproximadamente as mesmas proporções.
+
+A variável education apresenta uma diferença mais visível, a proporção de clientes com o terceiro grau (educação) é maior dentre os que não possuem um empréstimo imobiliário.
+
+A diferença mais marcante, no entanto, encontra-se na comparação dos trabalhos dos dois grupos. Esse resultado já era parcialmente esperado, dado os resultados da questão 1 (e levando-se em consideração que os empréstimos imobiliários representam a maior parte do total de empréstimos). Pode-se perceber que as ocupações "management" e "retired" ocupam frações mais significativas do grupo dos que não possuem empréstimos imobiliários (em comparação com suas proporções no grupo dos que possuem empréstimos imobiliários), enquanto a ocupação "blue-collar" ocupa uma fração mais significativa do grupo que possue tais empréstimos.
+
+Tomando um pouco de liberdade, poderíamos dizer que o cliente padrão que possui empréstimo imobiliário seria um trabalhador "blue-collar", com por volta de 40 anos, casado, que estudou até o segundo grau e que não possui outros empréstimos.
+
+
+
+
+
+## Referências
