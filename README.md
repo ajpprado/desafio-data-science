@@ -14,9 +14,9 @@ O output do arquivo foi salvo em desafio.html, que serve como relatório do desa
 ## Referências
 
 ### Bibliotecas
-Caret: https://CRAN.R-project.org/package=caret
-Ggplot2: https://cran.r-project.org/package=ggplot2
-Dplyr: https://cran.r-project.org/package=dplyr
+* Caret: https://CRAN.R-project.org/package=caret
+* Ggplot2: https://cran.r-project.org/package=ggplot2
+* Dplyr: https://cran.r-project.org/package=dplyr
 
 
 ### Dataset
